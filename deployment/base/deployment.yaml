@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mini-repo
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - name: mini-repo
+        image: mini_repo
+        ports:
+        - containerPort: 4000
+          protocol: TCP
+          name: http
+        envFrom:
+        - configMapRef:
+            name: configmap
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/mini_repo
+
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 4000
+          initialDelaySeconds: 1
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 4000
+          initialDelaySeconds: 3
+          periodSeconds: 10
+
+      volumes:
+      - name: data
+        emptyDir: {}

@@ -1,0 +1,10 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: mini-repo
+spec:
+  ports:
+  - name: http
+    protocol: TCP
+    port: 4000
+    targetPort: http
